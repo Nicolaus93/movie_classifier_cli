@@ -1,12 +1,10 @@
 import kaggle
-from pathlib import Path
 import pandas as pd
 from ast import literal_eval
 from sklearn.preprocessing import MultiLabelBinarizer
-from script import classifier
 
 
-class kaggleDataset(object):
+class KaggleDataset(object):
 
     def __init__(self, storing_path):
         self.data_path = storing_path
@@ -20,6 +18,7 @@ class kaggleDataset(object):
 
         # download data if not present
         if not movies_metadata.exists():
+            print("Downloading data..")
             # use kaggle api to download data
             kaggle.api.authenticate()
             kaggle.api.dataset_download_files('rounakbanik/the-movies-dataset', path=self.data_path, unzip=True)
@@ -37,6 +36,7 @@ class kaggleDataset(object):
         Function to preprocess the movies dataset.
         Largely inspired to https://www.kaggle.com/neerajkhadagade/predicting-the-movie-genres.
         """
+        print("Preprocessing data..")
         # read the csv
         df = pd.read_csv(self.data_path)
 
@@ -49,6 +49,7 @@ class kaggleDataset(object):
         
         # Selecting only those rows which have an actual genre
         genre_present = df['genres'] != '[]'
+
         # Series of the genres present in the movies_metadata
         genres = df['genres'][genre_present]
 
@@ -67,33 +68,3 @@ class kaggleDataset(object):
         y = y[~no_label_classes]
         X = df['overview'][~no_label_classes]
         return X, y, list(selected_genres)
-
-             
-if __name__ == "__main__":
-    storing_path = Path("./data")
-    dataset = kaggleDataset(storing_path)
-    dataset.download_and_extract()
-    X, Y, genres = dataset.preprocess()
-    rf_classifier = classifier(storing_path)
-    rf_classifier.train(X, Y, genres)
-
-
-    # ### Random Forest Classifier
-    # model = RandomForestClassifier()
-    # model.fit(X1, y1)
-    # train_pred = model.predict(X1)
-    # valid_pred = model.predict(X2)
-
-    # print("Classification Report")
-    # print("Training:\n", classification_report(y_true=y1, y_pred=train_pred, target_names=genre_counts))
-    # print("Validation:\n", classification_report(y_true=y2, y_pred=valid_pred, target_names=genre_counts))
-
-    # print("Accuracy")
-    # train_rfc_acc = accuracy_score(y_true=y1, y_pred=train_pred)
-    # valid_rfc_acc = accuracy_score(y_true=y2, y_pred=valid_pred)
-    # print("Traning: ", train_rfc_acc)
-    # print("Validation: ",valid_rfc_acc)
-
-    # # save
-    # joblib.dump(model, data_path / "model.pkl")
-    # joblib.dump(vect, data_path / "vect.pkl")

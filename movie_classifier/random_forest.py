@@ -9,7 +9,7 @@ from sklearn.ensemble import RandomForestClassifier
 from numpy import where
 
 
-class classifier(object):
+class RandomForest(object):
 
     def __init__(self, data_path: Path, max_features: int=1000, test_size: float=.3, verbose: bool=True):
         """
@@ -27,7 +27,7 @@ class classifier(object):
         self.genres = None
         self.verbose = verbose
 
-    def load(self):
+    def load(self) -> None:
         """Load the model and vectorizer previously stored.
         """
         if self.verbose:
@@ -38,10 +38,7 @@ class classifier(object):
         self.genres = model_dict["genres"]
         return
 
-    def set_genres(self, x):
-        self.genres = x
-
-    def train(self, features, targets, genres, save: bool=True):
+    def train(self, features, targets, genres, save: bool=True) -> None:
         """Train a Random Forest Classifier.
         Arguments:
             features: Pandas series where each value is a string
@@ -117,10 +114,6 @@ class classifier(object):
             raise TypeError("Please provide title as string.")
         if type(description) != str:
             raise TypeError("Please provide description as string.")
-        if len(title) == 0:
-            raise ValueError("Please provide a title!")
-        if len(description) == 0:
-            raise ValueError("Please provide a description!")
         if not self.model or not self.vect:
             raise RuntimeError("Model not trained!")
         if self.verbose:
@@ -131,25 +124,23 @@ class classifier(object):
 
         # generate prediction
         pred = self.model.predict(feat_vec)
-        print(pred)
-        print(self.genres)
         genre_ind = where(pred[0] == 1)[0][0]
         result = {"title": title, "description": description, "genre": self.genres[genre_ind]}
         return result
 
 
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='This script is used to classify movies based on a title and description provided as inputs.')
-    parser.add_argument('--title', default='', type=str, help='The title of the movie')
-    parser.add_argument('--description', default='', type=str, help='The description of the movie')
-    args = parser.parse_args()
-    title = args.title
-    description = args.description
+# if __name__ == "__main__":
+#     parser = argparse.ArgumentParser(description='This script is used to classify movies based on a title and description provided as inputs.')
+#     parser.add_argument('--title', default='', type=str, help='The title of the movie')
+#     parser.add_argument('--description', default='', type=str, help='The description of the movie')
+#     args = parser.parse_args()
+#     title = args.title
+#     description = args.description
 
-    p = Path('.')
-    simple_model = classifier(p)
-    simple_model.load()
-    res = simple_model.predict(title, description)
-    print(res)
-    # The evil Iago pretends to be friend of Othello in order to manipulate him to serve his own end in the film version of this Shakespeare classic.
+#     p = Path('./data')
+#     simple_model = RandomForest(p)
+#     simple_model.load()
+#     res = simple_model.predict(title, description)
+#     print(res)
+#     # The evil Iago pretends to be friend of Othello in order to manipulate him to serve his own end in the film version of this Shakespeare classic.
