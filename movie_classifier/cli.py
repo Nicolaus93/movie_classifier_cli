@@ -1,7 +1,7 @@
 import argparse
 from pathlib import Path
-from random_forest import RandomForest
-from dataset import KaggleDataset
+from .random_forest import RandomForest
+from .dataset import KaggleDataset
 
 
 class CLInterface(object):
