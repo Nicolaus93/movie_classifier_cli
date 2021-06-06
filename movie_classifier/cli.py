@@ -56,9 +56,13 @@ class CLInterface(object):
         return self.model.predict(self.title, self.description)
 
 
-if __name__ == "__main__":
+def main():
     p = Path('.') / "data"
     new_cli = CLInterface(p)
     new_cli.parse()
     res = new_cli.predict()
     print(res)
+
+
+if __name__ == "__main__":
+    main()
