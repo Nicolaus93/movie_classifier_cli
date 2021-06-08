@@ -117,14 +117,18 @@ class RandomForest(object):
         if not self.model or not self.vect:
             raise RuntimeError("Model not trained!")
         if self.verbose:
-            print("We're working for you...")
+            print("Now predicting...")
 
         # transform description into array
         feat_vec = self.vect.transform([description])
 
         # generate prediction
         pred = self.model.predict(feat_vec)
-        genre_ind = where(pred[0] == 1)[0][0]
+        try:
+            genre_ind = where(pred[0] == 1)[0][0]
+        except IndexError:
+            print("Sorry, we aren't able to classify this movie :(\n\
+                Try changing the description!")
         result = {"title": title, "description": description, "genre": self.genres[genre_ind]}
         return result
 

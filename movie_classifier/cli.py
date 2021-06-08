@@ -58,7 +58,7 @@ class CLInterface(object):
 
 def main():
     p = Path('.') / "data"
-    new_cli = CLInterface(p)
+    new_cli = CLInterface(p.absolute())
     new_cli.parse()
     res = new_cli.predict()
     print(res)

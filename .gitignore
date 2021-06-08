@@ -3,5 +3,7 @@
 .vscode/*
 __pycache__
 dist/
-setup.sh
+tmp/
+build/
+movie_classifier.egg-info/
 
