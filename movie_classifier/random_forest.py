@@ -11,15 +11,23 @@ from numpy import where
 
 class RandomForest(object):
 
-    def __init__(self, data_path: Path, max_features: int=1000, test_size: float=.3, verbose: bool=True):
+    def __init__(self, data_path: str, max_features: int=1000, test_size: float=.3, verbose: bool=True):
         """
-        TODO: Explain arguments.
+        Initialize a random forest model.
+        Arguments:
+            - data_path: represents the path to the folder where the data is stored.
+            - max_features: represents the max number of features used in the tf-idf vectorizer
+                (default to 1000)
+            - test_size: represents the fraction of the training data to be used as validation set
+                (default to 0.3) NOTE: at the moment this is not useful since the validation test 
+                is not used.
+            - verbose: whether to print information (default to True)
         """
         if max_features < 1:
             raise ValueError("Please specify a value greater than 0 for max_features!")
         if test_size < 0 or test_size > 1:
             raise ValueError("Please specify a value greater than 0 for test_size!")
-        self.data_path = data_path
+        self.data_path = Path(data_path)
         self.test_size = test_size
         self.max_features = max_features
         self.model = None
@@ -32,7 +40,12 @@ class RandomForest(object):
         """
         if self.verbose:
             print("Loading model..")
-        model_dict = joblib.load(self.data_path / "model.pkl")
+        model_path = self.data_path / "model.pkl"
+        if not model_path.exists():
+            raise FileNotFoundError(f"There is no model stored at {model_path}")
+        # TODO: we should check the model is a dict 
+        # containing the required keys
+        model_dict = joblib.load(model_path)
         self.model = model_dict["model"]
         self.vect = model_dict["vect"]
         self.genres = model_dict["genres"]
@@ -47,10 +60,11 @@ class RandomForest(object):
             targets: Pandas DataFrame where row i is a 0/1 vector
                 representing the presence of the corresponding label.
             genres: list of strings representing the genres.
+            save: boolean specifying whether to save the trained model.
         """
         if len(features) != len(targets):
             raise ValueError("Length of features and targets differ!")
-        if len(features) < 2:
+        if len(features) < len(genres):
             raise RuntimeError("Please consider using a bigger training set!")
         if len(genres) == 0:
             raise RuntimeError("No genres provided!") 
@@ -108,7 +122,8 @@ class RandomForest(object):
     def predict(self, title: str, description: str) -> Mapping[str, str]:
         """Predict movie genre based on description.
         Arguments:
-            title: 
+            - title: title of the movie, it's not used for the prediction
+            - description: short description of the movie, used for the prediction
         """
         if type(title) != str:
             raise TypeError("Please provide title as string.")
@@ -127,24 +142,7 @@ class RandomForest(object):
         try:
             genre_ind = where(pred[0] == 1)[0][0]
         except IndexError:
-            print("Sorry, we aren't able to classify this movie :(\n\
+            print("Sorry, the model was not able to classify this movie :(\n\
                 Try changing the description!")
         result = {"title": title, "description": description, "genre": self.genres[genre_ind]}
         return result
-
-
-
-# if __name__ == "__main__":
-#     parser = argparse.ArgumentParser(description='This script is used to classify movies based on a title and description provided as inputs.')
-#     parser.add_argument('--title', default='', type=str, help='The title of the movie')
-#     parser.add_argument('--description', default='', type=str, help='The description of the movie')
-#     args = parser.parse_args()
-#     title = args.title
-#     description = args.description
-
-#     p = Path('./data')
-#     simple_model = RandomForest(p)
-#     simple_model.load()
-#     res = simple_model.predict(title, description)
-#     print(res)
-#     # The evil Iago pretends to be friend of Othello in order to manipulate him to serve his own end in the film version of this Shakespeare classic.
