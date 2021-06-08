@@ -7,6 +7,8 @@ python setup.py install
 
 ## Usage
 
+**NOTE**: the package will use data downloaded from *Kaggle*, hence the user needs to be registered on *Kaggle* and accept their terms and conditions. In order to access the movies data, the *Kaggle* API is used. For this to work, an API Token should be present on the system. For more details on how to do this, please refer to the official [Kaggle api](https://github.com/Kaggle/kaggle-api#api-credentials).
+
 Once installed, you can use the package by invoking the command `movie_classifier` from the command line and providing `--title` and `--description` arguments, i.e.
 ```
 movie_classifier --title 'Othello' --description 'The evil Iago pretends to be friend of Othello in order to manipulate him to serve his own end in the film version of this Shakespeare classic.'
