@@ -141,8 +141,9 @@ class RandomForest(object):
         pred = self.model.predict(feat_vec)
         try:
             genre_ind = where(pred[0] == 1)[0][0]
+            result = {"title": title, "description": description, "genre": self.genres[genre_ind]}
         except IndexError:
             print("Sorry, the model was not able to classify this movie :(\n\
                 Try changing the description!")
-        result = {"title": title, "description": description, "genre": self.genres[genre_ind]}
+            result = {"title": title, "description": description, "genre": "Not found"}
         return result
