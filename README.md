@@ -19,3 +19,7 @@ Later, any other time the command is invoked the model will be loaded from `movi
 - `pandas` and `numpy` for preprocessing data
 - `joblib` to save and load the model
 - `scikit_learn`: `RandomForestClassifier` for the implementation of the classification algorithm, `TfidfVectorizer` to generate numerical features starting from the description text of the movie. Parameters of the classifier have not been tuned and default values are used. When generating numerical features with the vectorizer, we remove english stopwords (which are not relevant for the model) and fix the size of the feature vectors to `n=1000`. Note that the genre classification problem can be seen as a type of multilabel prediction problem, since a movie can be labeled with multiple genres. However, for simplicity we treat it as a multiclass classification problem, labeling the movie with the highest scoring genre.
+
+## Complete Demonstration
+
+After cloning the repository and making sure a *Kaggle* API Token is present on the system, run `sh example.sh`.
