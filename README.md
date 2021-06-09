@@ -22,4 +22,39 @@ Later, any other time the command is invoked the model will be loaded from `movi
 
 ## Complete Demonstration
 
-After cloning the repository and making sure a *Kaggle* API Token is present on the system, run `sh example.sh`.
+After cloning the repository and **making sure** a *Kaggle* API Token is present on the system, run `sh example.sh` on MacOS/Linux or `bash example.sh` on Windows. Note that if the *Kaggle* API Token is not found, then the following error will be thrown
+```
+OSError: Could not find kaggle.json. Make sure it's located in /home/USER/.kaggle. Or use the environment method.
+```
+If running correctly, after training the model and displaying the relevant statistics, the following result will be produced:
+```
+Now predicting...
+{
+    "title": "Othello",
+    "description": "The evil Iago pretends to be friend of Othello in order to manipulate him to serve his own end in the film version of this Shakespeare classic.",
+    "genre": "Drama"
+}
+Loading model..
+Now predicting...
+{
+    "title": "Catch Me If You Can",
+    "description": "Barely 21 yet, Frank is a skilled forger who has passed as a doctor, lawyer and pilot. FBI agent Carl becomes obsessed with tracking down the con man, who only revels in the pursuit.",
+    "genre": "Thriller"
+}
+Loading model..
+Now predicting...
+Sorry, the model was not able to classify this movie :(
+                Try changing the description!
+{
+    "title": "Transformers",
+    "description": "An ancient struggle between two Cybertronian races, the heroic Autobots and the evil Decepticons, comes to Earth, with a clue to the ultimate power held by a teenager.",
+    "genre": "Not found"
+}
+Loading model..
+Now predicting...
+{
+    "title": "Transformers",
+    "description": "A teenager who gets caught up in a war between the heroic Autobots and the villainous Decepticons, two factions of alien robots who can disguise themselves by transforming into everyday machinery, primarily vehicles. The Autobots intend to retrieve and use the AllSpark, the powerful artifact that created their robotic race that is on Earth, to rebuild their home planet Cybertron and end the war, while the Decepticons have the intention of using it to build an army by giving life to the machines of Earth.",
+    "genre": "Science Fiction"
+}
+```
