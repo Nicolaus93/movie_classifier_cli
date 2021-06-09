@@ -2,6 +2,7 @@ import argparse
 from pathlib import Path
 from .random_forest import RandomForest
 from .dataset import KaggleDataset
+from json import dumps
 
 
 class CLInterface(object):
@@ -64,7 +65,7 @@ def main():
     new_cli = CLInterface(p.absolute())
     new_cli.parse()
     res = new_cli.predict()
-    print(res)
+    print(dumps(res, indent=4))
 
 
 if __name__ == "__main__":
