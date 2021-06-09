@@ -1,13 +1,15 @@
 import pytest
 from movie_classifier import RandomForest
-PATH = '.'
+
+PATH = "."
+
 
 def test_invalid_max_features():
     with pytest.raises(ValueError):
         RandomForest(PATH, max_features=0)
 
 
-@pytest.mark.parametrize('size', [-1, 2])
+@pytest.mark.parametrize("size", [-1, 2])
 def test_test_size(size):
     with pytest.raises(ValueError):
         RandomForest(PATH, test_size=size)
@@ -23,7 +25,7 @@ def test_load():
 def test_train_features_targets():
     features = [0] * 2
     targets = [0] * 3
-    genres = ['temp']
+    genres = ["temp"]
     obj = RandomForest(PATH)
     with pytest.raises(ValueError):
         obj.train(features, targets, genres)
@@ -50,16 +52,16 @@ def test_train_no_genres():
 def test_predict_title():
     obj = RandomForest(PATH)
     with pytest.raises(TypeError):
-        obj.predict(1, 'hello')
+        obj.predict(1, "hello")
 
 
 def test_predict_description():
     obj = RandomForest(PATH)
     with pytest.raises(TypeError):
-        obj.predict('hello', 1)
+        obj.predict("hello", 1)
 
 
 def test_predict_model():
     obj = RandomForest(PATH)
     with pytest.raises(RuntimeError):
-        obj.predict('hello', 'world')
+        obj.predict("hello", "world")

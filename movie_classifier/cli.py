@@ -13,11 +13,14 @@ class CLInterface(object):
             data_path: Path specifying where the data is stored.
         """
         self.parser = argparse.ArgumentParser(
-            description='This script is used to classify movies based on a title and description provided as inputs.')
+            description="This script is used to classify movies based on a title and description provided as inputs."
+        )
         self.parser.add_argument(
-            '--title', default='', type=str, help='The title of the movie')
+            "--title", default="", type=str, help="The title of the movie"
+        )
         self.parser.add_argument(
-            '--description', default='', type=str, help='The description of the movie')
+            "--description", default="", type=str, help="The description of the movie"
+        )
         self.model = None
         self.title = None
         self.description = None
@@ -33,7 +36,7 @@ class CLInterface(object):
             raise ValueError("Please provide a title!")
         if len(self.description) == 0:
             raise ValueError("Please provide a description!")
-        
+
     def predict(self):
         """
         Provide a prediction using the movie description.
@@ -42,15 +45,15 @@ class CLInterface(object):
         """
         if not self.title or not self.description:
             raise ValueError("Title and/or description not specified!")
-        # retrieve model if trained, train it otherwise
+        #  retrieve model if trained, train it otherwise
         model_path = self.data_path / "model.pkl"
         self.model = RandomForest(self.data_path)
         if not model_path.exists():
             print("Model not trained yet. Training now, it can take a while..")
             dataset = KaggleDataset(self.data_path)  # create dataset
-            dataset.download_and_extract()           # download and extract data
-            X, Y, genres = dataset.preprocess()      # preprocess data
-            self.model.train(X, Y, genres)           # train classifier
+            dataset.download_and_extract()  # download and extract data
+            X, Y, genres = dataset.preprocess()  # preprocess data
+            self.model.train(X, Y, genres)  # train classifier
         else:
             self.model.load()  # load model
         return self.model.predict(self.title, self.description)

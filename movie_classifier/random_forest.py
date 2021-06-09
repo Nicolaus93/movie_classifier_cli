@@ -11,7 +11,13 @@ from numpy import where
 
 class RandomForest(object):
 
-    def __init__(self, data_path: str, max_features: int=1000, test_size: float=.3, verbose: bool=True):
+    def __init__(
+        self,
+        data_path: str,
+        max_features: int = 1000,
+        test_size: float = .3,
+        verbose: bool = True,
+    ):
         """
         Initialize a random forest model.
         Arguments:
@@ -43,7 +49,7 @@ class RandomForest(object):
         model_path = self.data_path / "model.pkl"
         if not model_path.exists():
             raise FileNotFoundError(f"There is no model stored at {model_path}")
-        # TODO: we should check the model is a dict 
+        # TODO: we should check the model is a dict
         # containing the required keys
         model_dict = joblib.load(model_path)
         self.model = model_dict["model"]
@@ -51,7 +57,7 @@ class RandomForest(object):
         self.genres = model_dict["genres"]
         return
 
-    def train(self, features, targets, genres, save: bool=True) -> None:
+    def train(self, features, targets, genres, save: bool = True) -> None:
         """Train a Random Forest Classifier.
         Arguments:
             features: Pandas series where each value is a string
@@ -67,17 +73,19 @@ class RandomForest(object):
         if len(features) < len(genres):
             raise RuntimeError("Please consider using a bigger training set!")
         if len(genres) == 0:
-            raise RuntimeError("No genres provided!") 
+            raise RuntimeError("No genres provided!")
 
         # initialize the random forest and vectorizer
         self.model = RandomForestClassifier()
         self.vect = TfidfVectorizer(
-            max_features=self.max_features, stop_words='english', lowercase=True)
+            max_features=self.max_features, stop_words="english", lowercase=True
+        )
         self.genres = genres
 
         # split dataset
         X_train, X_valid, y_train, y_valid = train_test_split(
-            features, targets, test_size=self.test_size, random_state=42)
+            features, targets, test_size=self.test_size, random_state=42
+        )
 
         # transform descriptions into arrays
         X_train_vec = self.vect.fit_transform(X_train)
@@ -107,10 +115,18 @@ class RandomForest(object):
 
             # print results
             print("Classification Report")
-            print("Training:\n", classification_report(
-                y_true=y_train, y_pred=train_pred, target_names=self.genres))
-            print("Validation:\n", classification_report(
-                y_true=y_valid, y_pred=valid_pred, target_names=self.genres))
+            print(
+                "Training:\n",
+                classification_report(
+                    y_true=y_train, y_pred=train_pred, target_names=self.genres
+                ),
+            )
+            print(
+                "Validation:\n",
+                classification_report(
+                    y_true=y_valid, y_pred=valid_pred, target_names=self.genres
+                ),
+            )
             print("Accuracy")
             train_acc = accuracy_score(y_true=y_train, y_pred=train_pred)
             valid_acc = accuracy_score(y_true=y_valid, y_pred=valid_pred)
@@ -141,9 +157,15 @@ class RandomForest(object):
         pred = self.model.predict(feat_vec)
         try:
             genre_ind = where(pred[0] == 1)[0][0]
-            result = {"title": title, "description": description, "genre": self.genres[genre_ind]}
+            result = {
+                "title": title,
+                "description": description,
+                "genre": self.genres[genre_ind],
+            }
         except IndexError:
-            print("Sorry, the model was not able to classify this movie :(\n\
-                Try changing the description!")
+            print(
+                "Sorry, the model was not able to classify this movie :(\n\
+                Try changing the description!"
+            )
             result = {"title": title, "description": description, "genre": "Not found"}
         return result
