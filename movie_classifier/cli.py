@@ -57,7 +57,7 @@ class CLInterface(object):
 
 
 def main():
-    p = Path('.') / "data"
+    p = Path.home() / "movie_classifier_data"
     new_cli = CLInterface(p.absolute())
     new_cli.parse()
     res = new_cli.predict()

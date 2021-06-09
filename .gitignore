@@ -6,4 +6,5 @@ dist/
 tmp/
 build/
 movie_classifier.egg-info/
+data/
 
